@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 
 import Head from 'next/head';
-
+import { useInView } from 'react-intersection-observer';
 import Layout from '@components/Layout';
 import Section from '@components/Section';
 import Container from '@components/Container';
@@ -10,17 +10,20 @@ import Button from '@components/Button';
 import styles from '@styles/Home.module.scss';
 
 export default function Home() {
-  const myRef = useRef();
-  const [isElementVisible, setIsElementVisible] = useState();
-  console.log('isElementVisible', isElementVisible);
-  useEffect(() => {
-    // console.log('myRef', myRef.current);
-    const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      setIsElementVisible(entry.isIntersecting);
-    });
-    observer.observe(myRef.current);
-  }, []);
+  const { ref: myRef, inView: isElementVisible } = useInView();
+  const { ref: rocketRef, inView: isRocketVisible } = useInView();
+
+  // const myRef = useRef();
+  // const [isElementVisible, setIsElementVisible] = useState();
+  // console.log('isElementVisible', isElementVisible);
+  // useEffect(() => {
+  //   // console.log('myRef', myRef.current);
+  //   const observer = new IntersectionObserver((entries) => {
+  //     const entry = entries[0];
+  //     setIsElementVisible(entry.isIntersecting);
+  //   });
+  //   observer.observe(myRef.current);
+  // }, []);
   return (
     <Layout>
       <Head>
@@ -111,7 +114,15 @@ export default function Home() {
         <Container>
           <h2 className={styles.heading}>Magic 🪄</h2>
 
-          <p>🚀</p>
+          <p ref={rocketRef}>
+            <span
+              className={`${styles.rocket} ${
+                isRocketVisible ? styles.animateRocket : ''
+              }`}
+            >
+              🚀
+            </span>
+          </p>
         </Container>
       </Section>
 
